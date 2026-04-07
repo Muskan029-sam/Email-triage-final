@@ -1,0 +1,35 @@
+name: email-triage-env
+description: Environment for spam filtering, urgency prioritization, and reply suggestion
+version: 0.1.0
+
+authors:
+  - Muskan <anshika6d5.hts21@gmail.com>
+
+license: MIT
+
+entry_point: env.EmailTriageEnv
+
+tasks:
+  - spam_filtering
+  - urgency_prioritization
+  - reply_suggestion
+
+reward_scheme:
+  spam_filtering: 1.0
+  urgency_prioritization: 2.0
+  reply_suggestion: 3.0
+
+observation_space:
+  type: text
+  description: The raw content of the email for the agent to analyze
+
+action_space:
+  type: discrete
+  description: Possible actions the agent can take
+  values:
+    - spam
+    - not_spam
+    - low
+    - medium
+    - high
+    - reply_suggestion
