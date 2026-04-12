@@ -26,15 +26,11 @@ def step(action: dict):
         "reward": reward if isinstance(reward, float) else getattr(reward, "value", 0.0),
         "done": done
     }
- 
-@app.get("/state")
+ @app.get("/state")
 def get_state():
     try:
-        state = env.state
-        print("DEBUG TYPE:", type(state))
-        print("DEBUG VALUE:", repr(state))  # safer than str()
+        state = env.state()   # <-- add parentheses
 
-        # Universal safe fallback
         if isinstance(state, dict):
             if "subject" in state and "body" in state:
                 return {"subject": state["subject"], "body": state["body"]}
@@ -45,8 +41,10 @@ def get_state():
         if isinstance(state, (list, tuple)) and len(state) >= 2:
             return {"subject": state[0], "body": state[1]}
 
-        return {"state": repr(state)}
+        return {"state": str(state)}
+
     except Exception as e:
         return {"error": f"State not initialized or invalid: {e}"}
+
 def main():
     return app
