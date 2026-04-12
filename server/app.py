@@ -26,13 +26,11 @@ def step(action: dict):
         "reward": reward if isinstance(reward, float) else getattr(reward, "value", 0.0),
         "done": done
     }
-
 @app.get("/state")
 def get_state():
     try:
-        print("DEBUG STATE:", env.state)  # 👈 this will show the actual structure
-        state = env.state
-        return {"state": str(state)}
+        print("DEBUG STATE:", env.state)
+        return {"state": str(env.state)}
     except Exception as e:
         return {"error": f"State not initialized or invalid: {e}"}
 def main():
