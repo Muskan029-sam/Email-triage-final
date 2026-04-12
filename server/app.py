@@ -8,12 +8,12 @@ env = EmailTriageEnv()
 @app.post("/reset")
 def reset():
     state = env.reset()
-    print("DEBUG RESET STATE:", state)
+    print("DEBUG RESET STATE:", state)   # 👈 this shows what reset returns
+    print("DEBUG ENV.STATE:", env.state) # 👈 this shows what env.state holds
     return {
         "subject": state["subject"],
         "body": state["body"]
     }
-
 @app.post("/step")
 def step(action: dict):
     action_str = action.get("action", "")
