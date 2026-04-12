@@ -30,8 +30,9 @@ def step(action: dict):
 def get_state():
     try:
         state = env.state()
-        if callable(state):
-            state = state()  # call again if it's still a function
+        # If state is still a function, call it again
+        while callable(state):
+            state = state()
 
         if isinstance(state, dict):
             return {
