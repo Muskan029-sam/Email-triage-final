@@ -29,8 +29,12 @@ def step(action: dict):
 @app.get("/state")
 def get_state():
     try:
-        print("DEBUG STATE:", env.state)
-        return {"state": str(env.state)}
+        state = env.state
+        email = state.get("current_email", {})
+        return {
+            "subject": email.get("subject", ""),
+            "body": email.get("body", "")
+        }
     except Exception as e:
         return {"error": f"State not initialized or invalid: {e}"}
 def main():
