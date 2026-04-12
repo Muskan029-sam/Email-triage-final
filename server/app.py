@@ -30,16 +30,26 @@ def step(action: dict):
 def get_state():
     try:
         state = env.state()   # call the function
-        print("DEBUG TYPE:", type(env.state))
-print("DEBUG VALUE:", env.state)
-print("DEBUG CALL TYPE:", type(env.state()))
-print("DEBUG CALL VALUE:", repr(env.state()))
 
-        # Just return it raw for now
-        return {"state": repr(state)}
+        # If it's a dict
+        if isinstance(state, dict):
+            return {
+                "subject": state.get("subject") or state.get("current_email", {}).get("subject", ""),
+                "body": state.get("body") or state.get("current_email", {}).get("body", "")
+            }
+
+        # If it's a tuple or list
+        if isinstance(state, (list, tuple)) and len(state) >= 2:
+            return {"subject": state[0], "body": state[1]}
+
+        # If it's a custom object
+        if hasattr(state, "subject") and hasattr(state, "body"):
+            return {"subject": state.subject, "body": state.body}
+
+        # Fallback
+        return {"state": str(state)}
 
     except Exception as e:
-        return {"error": f"State not initialized or invalid: {e}"} 
-
+        return {"error": f"State not initialized or invalid: {e}"}
 def main():
     return app
