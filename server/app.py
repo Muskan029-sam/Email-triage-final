@@ -30,8 +30,10 @@ def step(action: dict):
 def get_state():
     try:
         state = env.state()   # call the function
-        print("DEBUG TYPE:", type(state))
-        print("DEBUG VALUE:", repr(state))
+        print("DEBUG TYPE:", type(env.state))
+print("DEBUG VALUE:", env.state)
+print("DEBUG CALL TYPE:", type(env.state()))
+print("DEBUG CALL VALUE:", repr(env.state()))
 
         # Just return it raw for now
         return {"state": repr(state)}
