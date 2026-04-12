@@ -26,25 +26,18 @@ def step(action: dict):
         "reward": reward if isinstance(reward, float) else getattr(reward, "value", 0.0),
         "done": done
     }
- @app.get("/state")
+@app.get("/state")
 def get_state():
     try:
-        state = env.state()   # <-- add parentheses
+        state = env.state()   # call the function
+        print("DEBUG TYPE:", type(state))
+        print("DEBUG VALUE:", repr(state))
 
-        if isinstance(state, dict):
-            if "subject" in state and "body" in state:
-                return {"subject": state["subject"], "body": state["body"]}
-            if "current_email" in state:
-                email = state["current_email"]
-                return {"subject": email.get("subject", ""), "body": email.get("body", "")}
-
-        if isinstance(state, (list, tuple)) and len(state) >= 2:
-            return {"subject": state[0], "body": state[1]}
-
-        return {"state": str(state)}
+        # Just return it raw for now
+        return {"state": repr(state)}
 
     except Exception as e:
-        return {"error": f"State not initialized or invalid: {e}"}
+        return {"error": f"State not initialized or invalid: {e}"} 
 
 def main():
     return app
