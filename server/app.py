@@ -29,25 +29,21 @@ def step(action: dict):
 @app.get("/state")
 def get_state():
     try:
-        state = env.state()   # call the function
+        state = env.state()
+        if callable(state):
+            state = state()  # call again if it's still a function
 
-        # If it's a dict
         if isinstance(state, dict):
             return {
-                "subject": state.get("subject") or state.get("current_email", {}).get("subject", ""),
-                "body": state.get("body") or state.get("current_email", {}).get("body", "")
+                "subject": state.get("subject", ""),
+                "body": state.get("body", "")
             }
-
-        # If it's a tuple or list
-        if isinstance(state, (list, tuple)) and len(state) >= 2:
+        elif isinstance(state, (list, tuple)) and len(state) >= 2:
             return {"subject": state[0], "body": state[1]}
-
-        # If it's a custom object
-        if hasattr(state, "subject") and hasattr(state, "body"):
+        elif hasattr(state, "subject") and hasattr(state, "body"):
             return {"subject": state.subject, "body": state.body}
-
-        # Fallback
-        return {"state": str(state)}
+        else:
+            return {"state": str(state)}
 
     except Exception as e:
         return {"error": f"State not initialized or invalid: {e}"}
