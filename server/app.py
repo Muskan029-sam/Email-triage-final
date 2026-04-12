@@ -8,6 +8,7 @@ env = EmailTriageEnv()
 @app.post("/reset")
 def reset():
     state = env.reset()
+    print("DEBUG RESET STATE:", state)
     return {
         "subject": state["subject"],
         "body": state["body"]
