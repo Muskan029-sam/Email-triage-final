@@ -29,31 +29,20 @@ def step(action: dict):
 @app.get("/state")
 def get_state():
     try:
-        state = env.state   # <-- no ()
-        # If state is a dict with subject/body
+        state = env.state   # <-- no parentheses
         if isinstance(state, dict):
-            return {
-                "subject": state.get("subject", ""),
-                "body": state.get("body", "")
-            }
-        # If state has "current_email"
-        if isinstance(state, dict) and "current_email" in state:
-            email = state["current_email"]
-            return {
-                "subject": email.get("subject", ""),
-                "body": email.get("body", "")
-            }
+            # If state is a dict with subject/body
+            if "subject" in state and "body" in state:
+                return {"subject": state["subject"], "body": state["body"]}
+            # If state has current_email nested
+            if "current_email" in state:
+                email = state["current_email"]
+                return {"subject": email.get("subject", ""), "body": email.get("body", "")}
         # If state is a tuple/list
         if isinstance(state, (list, tuple)) and len(state) >= 2:
-            return {
-                "subject": state[0],
-                "body": state[1]
-            }
+            return {"subject": state[0], "body": state[1]}
         return {"state": str(state)}
-    except Exception as e:
-        return {"error": f"State not initialized or invalid: {e}"}
-    except:
+    except Exception:
         return {"error": "State not initialized"}
-
 def main():
     return app
